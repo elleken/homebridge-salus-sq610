@@ -32,7 +32,7 @@
     "panasonic",
     "heatpump"
   ],
-  "author": "Mike Hernas",
+  "author": "Rasmus Elken",
   "license": "MIT",
   "homepage": "https://github.com/elleken/homebridge-salus-sq610",
   "dependencies": {

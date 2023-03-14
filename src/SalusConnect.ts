@@ -1,8 +1,8 @@
-import axios from "axios";
-import { CharacteristicValue, Logger } from "homebridge";
-import { SalusProperty } from "./SalusProperty";
+import axios from 'axios';
+import { CharacteristicValue, Logger } from 'homebridge';
+import { SalusProperty } from './SalusProperty';
 
-const baseUrl = "https://eu.salusconnect.io/";
+const baseUrl = 'https://eu.salusconnect.io/';
 
 function makeProp(prop: Props) {
   return `ep_9:sIT600TH:${prop}`;
@@ -10,13 +10,13 @@ function makeProp(prop: Props) {
 
 export function getKnownProperty(
   props: SalusProperty[],
-  prop: Props
+  prop: Props,
 ): SalusProperty | undefined {
   return props.find((p) => p.name === makeProp(prop));
 }
 
 export function getKnownProperties(
-  props: SalusProperty[]
+  props: SalusProperty[],
 ): Record<Props, SalusProperty | undefined> {
   const parsedProps: Record<string, SalusProperty> = {};
   props.forEach((prop) => {
@@ -41,18 +41,18 @@ export function getKnownProperties(
 }
 
 export enum Props {
-  Temperature = "LocalTemperature_x100",
-  Humidity = "SunnySetpoint_x100",
-  HeatingSetpoint = "HeatingSetpoint_x100",
-  CoolingSetpoint = "CoolingSetpoint_x100",
-  RunningState = "RunningState",
-  HoldType = "HoldType",
-  SetHeatingSetpoint = "SetHeatingSetpoint_x100",
-  SetAutoHeatingSetpoint = "SetAutoHeatingSetpoint_x100",
-  SetCoolingSetpoint = "SetCoolingSetpoint_x100",
-  SetAutoCoolingSetpoint = "SetAutoCoolingSetpoint_x100",
-  SetHoldType = "SetHoldType",
-  SystemMode = "SystemMode",
+  Temperature = 'LocalTemperature_x100',
+  Humidity = 'SunnySetpoint_x100',
+  HeatingSetpoint = 'HeatingSetpoint_x100',
+  CoolingSetpoint = 'CoolingSetpoint_x100',
+  RunningState = 'RunningState',
+  HoldType = 'HoldType',
+  SetHeatingSetpoint = 'SetHeatingSetpoint_x100',
+  SetAutoHeatingSetpoint = 'SetAutoHeatingSetpoint_x100',
+  SetCoolingSetpoint = 'SetCoolingSetpoint_x100',
+  SetAutoCoolingSetpoint = 'SetAutoCoolingSetpoint_x100',
+  SetHoldType = 'SetHoldType',
+  SystemMode = 'SystemMode',
 }
 
 export class Token {
@@ -100,7 +100,7 @@ export class SalusConnect {
     this.password = password;
     this.log = log;
     this.thermostatModels = thermostatModels.map((e) => {
-      return e.toUpperCase().replace(/^VS(10|20)\w+/, "IT600THERMHW");
+      return e.toUpperCase().replace(/^VS(10|20)\w+/, 'IT600THERMHW');
     });
   }
 
@@ -118,18 +118,18 @@ export class SalusConnect {
   }
 
   async refreshToken() {
-    this.log?.info("Got 401, refreshing token...");
+    this.log?.info('Got 401, refreshing token...');
     this.token = undefined;
     return await this.getToken();
   }
 
   async login() {
-    const response = await axios.post(this.buildUrl("users/sign_in"), {
+    const response = await axios.post(this.buildUrl('users/sign_in'), {
       user: { email: this.username, password: this.password },
     });
     const token = response.data.access_token;
     if (!token) {
-      throw new Error("Could not get token from login");
+      throw new Error('Could not get token from login');
     }
     return token;
   }
@@ -137,7 +137,7 @@ export class SalusConnect {
   async getDevices(retried = false) {
     const token = await this.getToken();
     try {
-      const response = await axios.get(this.buildUrl("apiv1/devices"), {
+      const response = await axios.get(this.buildUrl('apiv1/devices'), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -153,8 +153,8 @@ export class SalusConnect {
               device.dsn,
               device.product_name,
               device.oem_model,
-              await this.getAllProperties({ id: device.dsn })
-            )
+              await this.getAllProperties({ id: device.dsn }),
+            ),
           );
         }
       }
@@ -186,11 +186,11 @@ export class SalusConnect {
       const response = await axios(
         this.buildUrl(`apiv1/dsns/${id}/properties/${makeProp(prop)}`),
         {
-          method: "GET",
+          method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -203,7 +203,7 @@ export class SalusConnect {
         throw new Error(
           `'Wrong response on getProperty(${JSON.stringify({ id, prop })}): ${
             error.response?.data
-          }'`
+          }'`,
         );
       }
       throw error;
@@ -222,11 +222,11 @@ export class SalusConnect {
       const response = await axios(
         this.buildUrl(`apiv1/dsns/${id}/properties`),
         {
-          method: "GET",
+          method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       return response.data.map((data) => data.property) as SalusProperty[];
     } catch (error) {
@@ -239,7 +239,7 @@ export class SalusConnect {
         throw new Error(
           `'Wrong response on getAllProperties(${JSON.stringify({ id })}): ${
             error.response?.data
-          }'`
+          }'`,
         );
       }
       throw error;
@@ -261,17 +261,17 @@ export class SalusConnect {
     try {
       const response = await axios.post(
         this.buildUrl(
-          `apiv1/dsns/${id}/properties/${makeProp(prop)}/datapoints`
+          `apiv1/dsns/${id}/properties/${makeProp(prop)}/datapoints`,
         ),
         { datapoint: { value } },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       this.log?.debug(
-        `Response: ${JSON.stringify(response.data, undefined, 4)}`
+        `Response: ${JSON.stringify(response.data, undefined, 4)}`,
       );
       return response.data.datapoint;
     } catch (error) {
@@ -286,7 +286,7 @@ export class SalusConnect {
             id,
             prop,
             value,
-          })}): ${error.response?.data}'`
+          })}): ${error.response?.data}'`,
         );
       }
       throw error;

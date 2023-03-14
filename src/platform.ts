@@ -6,11 +6,11 @@ import {
   PlatformConfig,
   Service,
   Characteristic,
-} from "homebridge";
+} from 'homebridge';
 
-import { PLATFORM_NAME, PLUGIN_NAME } from "./settings";
-import { SalusSQ610Accessory } from "./platformAccessory";
-import { DeviceWithProps, SalusConnect } from "./SalusConnect";
+import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
+import { SalusSQ610Accessory } from './platformAccessory';
+import { DeviceWithProps, SalusConnect } from './SalusConnect';
 
 /**
  * HomebridgePlatform
@@ -32,20 +32,20 @@ export class SalusSQ610HomebridgePlatform implements DynamicPlatformPlugin {
   constructor(
     public readonly log: Logger,
     public readonly config: PlatformConfig,
-    public readonly api: API
+    public readonly api: API,
   ) {
-    this.log.debug("Finished initializing platform:", this.config.name);
+    this.log.debug('Finished initializing platform:', this.config.name);
     this.email = this.config.email;
     this.password = this.config.password;
     this.thermostatModels = this.config.thermostatModels;
 
-    this.api.on("didFinishLaunching", () => {
+    this.api.on('didFinishLaunching', () => {
       this.discoverDevices();
     });
   }
 
   configureAccessory(accessory: PlatformAccessory) {
-    this.log.info("Loading accessory from cache:", accessory.displayName);
+    this.log.info('Loading accessory from cache:', accessory.displayName);
     this.accessories.push(accessory);
   }
 
@@ -69,19 +69,19 @@ export class SalusSQ610HomebridgePlatform implements DynamicPlatformPlugin {
     for (const device of devices) {
       const uuid = this.api.hap.uuid.generate(device.id);
       const existingAccessory = this.accessories.find(
-        (accessory) => accessory.UUID === uuid
+        (accessory) => accessory.UUID === uuid,
       );
 
       if (existingAccessory) {
         this.log.info(
-          "Restoring existing accessory from cache:",
-          existingAccessory.displayName
+          'Restoring existing accessory from cache:',
+          existingAccessory.displayName,
         );
         existingAccessory.context.device = device;
         this.api.updatePlatformAccessories([existingAccessory]);
         new SalusSQ610Accessory(this, existingAccessory, salusConnect);
       } else {
-        this.log.info("Adding new accessory:", device.name);
+        this.log.info('Adding new accessory:', device.name);
         const accessory = new this.api.platformAccessory(device.name, uuid);
         accessory.context.device = device;
         new SalusSQ610Accessory(this, accessory, salusConnect);

@@ -1,7 +1,7 @@
-import { API } from "homebridge";
+import { API } from 'homebridge';
 
-import { PLATFORM_NAME } from "./settings";
-import { SalusSQ610HomebridgePlatform } from "./platform";
+import { PLATFORM_NAME } from './settings';
+import { SalusSQ610HomebridgePlatform } from './platform';
 
 /**
  * This method registers the platform with Homebridge
