@@ -16,10 +16,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hernas/homebridge-salus-sq610"
+    "url": "git+https://github.com/elleken/homebridge-salus-sq610"
   },
   "bugs": {
-    "url": "https://github.com/hernas/homebridge-salus-sq610/issues"
+    "url": "https://github.com/elleken/homebridge-salus-sq610/issues"
   },
   "keywords": [
     "salus",
@@ -34,7 +34,7 @@
   ],
   "author": "Mike Hernas",
   "license": "MIT",
-  "homepage": "https://github.com/hernas/homebridge-salus-sq610",
+  "homepage": "https://github.com/elleken/homebridge-salus-sq610",
   "dependencies": {
     "axios": "^0.26.1"
   },
