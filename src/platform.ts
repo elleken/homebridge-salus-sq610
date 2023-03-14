@@ -1,8 +1,16 @@
-import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
+import {
+  API,
+  DynamicPlatformPlugin,
+  Logger,
+  PlatformAccessory,
+  PlatformConfig,
+  Service,
+  Characteristic,
+} from "homebridge";
 
-import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
-import { SalusSQ610Accessory } from './platformAccessory';
-import { DeviceWithProps, SalusConnect } from './SalusConnect';
+import { PLATFORM_NAME, PLUGIN_NAME } from "./settings";
+import { SalusSQ610Accessory } from "./platformAccessory";
+import { DeviceWithProps, SalusConnect } from "./SalusConnect";
 
 /**
  * HomebridgePlatform
@@ -11,7 +19,8 @@ import { DeviceWithProps, SalusConnect } from './SalusConnect';
  */
 export class SalusSQ610HomebridgePlatform implements DynamicPlatformPlugin {
   public readonly Service: typeof Service = this.api.hap.Service;
-  public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
+  public readonly Characteristic: typeof Characteristic =
+    this.api.hap.Characteristic;
 
   private readonly email: string;
   private readonly password: string;
@@ -23,56 +32,62 @@ export class SalusSQ610HomebridgePlatform implements DynamicPlatformPlugin {
   constructor(
     public readonly log: Logger,
     public readonly config: PlatformConfig,
-    public readonly api: API,
+    public readonly api: API
   ) {
-    this.log.debug('Finished initializing platform:', this.config.name);
+    this.log.debug("Finished initializing platform:", this.config.name);
     this.email = this.config.email;
     this.password = this.config.password;
     this.thermostatModels = this.config.thermostatModels;
 
-    this.api.on('didFinishLaunching', () => {
+    this.api.on("didFinishLaunching", () => {
       this.discoverDevices();
     });
   }
 
   configureAccessory(accessory: PlatformAccessory) {
-    this.log.info('Loading accessory from cache:', accessory.displayName);
+    this.log.info("Loading accessory from cache:", accessory.displayName);
     this.accessories.push(accessory);
   }
 
   async discoverDevices() {
-    if(!this.email || !this.password) {
+    if (!this.email || !this.password) {
       return;
     }
     const salusConnect = new SalusConnect({
       username: this.email,
       password: this.password,
       log: this.log,
-      thermostatModels: ['SQ610', 'SQ610RF'],
+      thermostatModels: this.thermostatModels,
     });
 
-    let devices:DeviceWithProps[] = [];
+    let devices: DeviceWithProps[] = [];
     try {
       devices = await salusConnect.getDevices();
-    } catch(e) {
+    } catch (e) {
       this.log.error(`Could not load the devices: ${e}`);
     }
     for (const device of devices) {
-
       const uuid = this.api.hap.uuid.generate(device.id);
-      const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
+      const existingAccessory = this.accessories.find(
+        (accessory) => accessory.UUID === uuid
+      );
 
       if (existingAccessory) {
-        this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
+        this.log.info(
+          "Restoring existing accessory from cache:",
+          existingAccessory.displayName
+        );
         existingAccessory.context.device = device;
         this.api.updatePlatformAccessories([existingAccessory]);
         new SalusSQ610Accessory(this, existingAccessory, salusConnect);
       } else {
-        this.log.info('Adding new accessory:', device.name);
+        this.log.info("Adding new accessory:", device.name);
         const accessory = new this.api.platformAccessory(device.name, uuid);
         accessory.context.device = device;
         new SalusSQ610Accessory(this, accessory, salusConnect);
-        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
+          accessory,
+        ]);
       }
     }
   }

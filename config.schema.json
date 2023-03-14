@@ -19,6 +19,16 @@
         "required": true,
         "default": ""
       },
+      "thermostatModels": {
+        "title": "Thermostat models",
+        "type": "array",
+        "default": ["SQ610", "SQ610RF", "SQ610RFNH"],
+        "items": {
+          "title": "Thermostat model",
+          "type": "string"
+        },
+        "required": true
+      },
       "refreshTime": {
         "title": "Refresh time",
         "type": "integer",

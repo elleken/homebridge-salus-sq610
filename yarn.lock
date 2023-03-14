@@ -2763,7 +2763,7 @@ hexy@^0.2.10:
   resolved "https://registry.yarnpkg.com/hexy/-/hexy-0.2.11.tgz#9939c25cb6f86a91302f22b8a8a72573518e25b4"
   integrity sha512-ciq6hFsSG/Bpt2DmrZJtv+56zpPdnq+NQ4ijEFrveKN0ZG1mhl/LdT1NQZ9se6ty1fACcI4d4vYqC9v8EYpH2A==
 
-homebridge-config-ui-x@^4.42.0:
+homebridge-config-ui-x@^4.50.2:
   version "4.50.2"
   resolved "https://registry.yarnpkg.com/homebridge-config-ui-x/-/homebridge-config-ui-x-4.50.2.tgz#90982e2b761b6c9d392085a0701e404aeb5accb3"
   integrity sha512-PXdWQftZDnG2s4jUWWPH5LvSddMaUmeGlPAUZtJqa4XuEJivljiZGs0SuVJYYbAaYy88WJK5ENImfecf+yYCCw==
