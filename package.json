@@ -1,5 +1,5 @@
 {
-  "name": "@elleken/homebridge-salus-sq610",
+  "name": "@elleken/homebridge-salus-sq610-dynamic-thermostat-models",
   "version": "2.0.0",
   "description": "Homebridge plugin for Salus SQ610 modules",
   "engines": {
